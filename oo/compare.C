@@ -1,4 +1,4 @@
-void compare(const char* histogram = "v2_vs_mass", const char* fileName1 = "massandv2.root", const char* fileName2 = "massandv2_sub.root")
+void compare(const char* histogram = "v2_vs_mass", const char* fileName1 = "massandv2_sub.root", const char* fileName2 = "massandv2.root")
 {
     auto file1 = TFile::Open(fileName1);
     auto file2 = TFile::Open(fileName2);
@@ -8,7 +8,7 @@ void compare(const char* histogram = "v2_vs_mass", const char* fileName1 = "mass
     int currentPad = 1;
 
     int imult = 0;
-    while (imult != -1) {
+    while (imult < 10) {
         int itrig = 0;
         while (true) {
             Printf("%d %d", imult, itrig);
@@ -18,8 +18,6 @@ void compare(const char* histogram = "v2_vs_mass", const char* fileName1 = "mass
 
             auto graph1 = (TGraphErrors*) file1->Get(tmp);
             if (!graph1) {
-                if (itrig == 0)
-                    imult = -2; // to entirely break
                 break;
             }
 
@@ -27,10 +25,12 @@ void compare(const char* histogram = "v2_vs_mass", const char* fileName1 = "mass
             graph1->Draw("AP");
 
             auto graph2 = (TGraphErrors*) file2->Get(tmp);
-            graph2->SetLineColor(2);
-            graph2->SetMarkerColor(2);
-            graph2->SetMarkerStyle(4);
-            graph2->Draw("PSAME");
+            if (graph2) {
+                graph2->SetLineColor(2);
+                graph2->SetMarkerColor(2);
+                graph2->SetMarkerStyle(4);
+                graph2->Draw("PSAME");
+            }
 
             currentPad++;
             itrig++;
